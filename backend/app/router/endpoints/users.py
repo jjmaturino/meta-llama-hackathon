@@ -8,6 +8,6 @@ db_users = {
     "bob": {"name": "Bob", "email": "bob@example.com"},
 }
 
-@router.get("/user/{username}")
+@router.get("/")
 def get_user(username: str):
     return db_users.get(username, {"error": "User not found"})
