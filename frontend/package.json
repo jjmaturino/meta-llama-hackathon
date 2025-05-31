@@ -10,7 +10,8 @@
     "test": "vitest run",
     "lint": "eslint",
     "format": "prettier",
-    "check": "prettier --write . && eslint --fix"
+    "check": "prettier --write . && eslint --fix",
+    "generate:routes": "npx @tanstack/router-cli ./src/routes"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.6",
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "@tanstack/eslint-config": "^0.1.0",
+    "@tanstack/router-cli": "^1.16.6",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
     "@types/react": "^19.0.8",

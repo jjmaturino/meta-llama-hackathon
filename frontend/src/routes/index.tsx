@@ -1,39 +1,42 @@
-import { createFileRoute } from '@tanstack/react-router'
-import logo from '../logo.svg'
+import { createFileRoute, Link } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
-  component: App,
+  component: HomePage,
 })
 
-function App() {
+function HomePage() {
   return (
-    <div className="text-center">
-      <header className="min-h-screen flex flex-col items-center justify-center bg-[#282c34] text-white text-[calc(10px+2vmin)]">
-        <img
-          src={logo}
-          className="h-[40vmin] pointer-events-none animate-[spin_20s_linear_infinite]"
-          alt="logo"
-        />
-        <p>
-          Edit <code>src/routes/index.tsx</code> and save to reload.
-        </p>
-        <a
-          className="text-[#61dafb] hover:underline"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div className="min-h-screen bg-gray-100 p-6">
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">Welcome to Your Dashboard</h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Notes Card */}
+        <Link
+          to="/notes"
+          className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow duration-200 cursor-pointer text-left"
         >
-          Learn React
-        </a>
-        <a
-          className="text-[#61dafb] hover:underline"
-          href="https://tanstack.com"
-          target="_blank"
-          rel="noopener noreferrer"
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Notes</h2>
+          <p className="text-gray-600">Create and manage your notes here.</p>
+        </Link>
+
+        {/* Quizzes Card */}
+        <Link
+          to="/quizzes"
+          className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow duration-200 cursor-pointer text-left"
         >
-          Learn TanStack
-        </a>
-      </header>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Quizzes</h2>
+          <p className="text-gray-600">Test your knowledge with interactive quizzes.</p>
+        </Link>
+
+        {/* Profile Card */}
+        <Link
+          to="/profile"
+          className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow duration-200 cursor-pointer text-left"
+        >
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Profile</h2>
+          <p className="text-gray-600">View and update your profile settings.</p>
+        </Link>
+      </div>
     </div>
   )
 }
