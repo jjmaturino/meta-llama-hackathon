@@ -3,11 +3,11 @@ from typing import List
 import os
 from app.pydantic_models.notes import Note
 
-notes = APIRouter()
+router = APIRouter()
 
 NOTES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'notes')
 
-@notes.get("/notes", response_model=List[str])
+@router.get("/notes", response_model=List[str])
 def get_all_notes():
     # List all .md files in the notes directory, return their uuids (filenames without .md)
     try:
@@ -17,7 +17,7 @@ def get_all_notes():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@notes.get("/notes/{uuid}", response_model=Note)
+@router.get("/notes/{uuid}", response_model=Note)
 def get_note_by_uuid(uuid: str):
     # Retrieve the content of a note by uuid
     note_path = os.path.join(NOTES_DIR, f"{uuid}.md")

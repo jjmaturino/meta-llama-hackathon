@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-users = APIRouter()
+router = APIRouter()
 
 # Hardcoded user info
 db_users = {
@@ -8,6 +8,6 @@ db_users = {
     "bob": {"name": "Bob", "email": "bob@example.com"},
 }
 
-@users.get("/")
+@router.get("/")
 def get_user(username: str):
     return db_users.get(username, {"error": "User not found"})
