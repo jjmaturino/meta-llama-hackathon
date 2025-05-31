@@ -6,3 +6,4 @@
 4. Run ***uvicorn main:app --reload --env-file ./.env***
    1. This allows for hot reloads during development
 5. Head to ***localhost:8000/docs*** to view auto-generated api docs
+#uvicorn app.main:app --reload --env-file ./.env this command works instead of one above because main.py is in app folder.
