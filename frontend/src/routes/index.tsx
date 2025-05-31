@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -11,22 +11,31 @@ function HomePage() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Notes Card */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <Link
+          to="/notes"
+          className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow duration-200 cursor-pointer text-left"
+        >
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Notes</h2>
           <p className="text-gray-600">Create and manage your notes here.</p>
-        </div>
+        </Link>
 
         {/* Quizzes Card */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <Link
+          to="/quizzes"
+          className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow duration-200 cursor-pointer text-left"
+        >
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Quizzes</h2>
           <p className="text-gray-600">Test your knowledge with interactive quizzes.</p>
-        </div>
+        </Link>
 
         {/* Profile Card */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <Link
+          to="/profile"
+          className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow duration-200 cursor-pointer text-left"
+        >
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Profile</h2>
           <p className="text-gray-600">View and update your profile settings.</p>
-        </div>
+        </Link>
       </div>
     </div>
   )

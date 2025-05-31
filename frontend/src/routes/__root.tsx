@@ -12,14 +12,18 @@ interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  component: () => (
-    <>
+  component: RootComponent,
+})
+
+function RootComponent() {
+  return (
+    <div>
       <Header />
 
       <Outlet />
       <TanStackRouterDevtools />
 
       <TanStackQueryLayout />
-    </>
-  ),
-})
+    </div>
+  )
+}
