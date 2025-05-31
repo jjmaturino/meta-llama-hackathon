@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as TestCreateShortanswerImport } from './routes/test-create-shortanswer'
 import { Route as TestCreateMultiselectImport } from './routes/test-create-multiselect'
 import { Route as QuizzesImport } from './routes/quizzes'
 import { Route as ProfileImport } from './routes/profile'
@@ -19,6 +20,12 @@ import { Route as IndexImport } from './routes/index'
 import { Route as DemoTanstackQueryImport } from './routes/demo.tanstack-query'
 
 // Create/Update Routes
+
+const TestCreateShortanswerRoute = TestCreateShortanswerImport.update({
+  id: '/test-create-shortanswer',
+  path: '/test-create-shortanswer',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const TestCreateMultiselectRoute = TestCreateMultiselectImport.update({
   id: '/test-create-multiselect',
@@ -95,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestCreateMultiselectImport
       parentRoute: typeof rootRoute
     }
+    '/test-create-shortanswer': {
+      id: '/test-create-shortanswer'
+      path: '/test-create-shortanswer'
+      fullPath: '/test-create-shortanswer'
+      preLoaderRoute: typeof TestCreateShortanswerImport
+      parentRoute: typeof rootRoute
+    }
     '/demo/tanstack-query': {
       id: '/demo/tanstack-query'
       path: '/demo/tanstack-query'
@@ -113,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/quizzes': typeof QuizzesRoute
   '/test-create-multiselect': typeof TestCreateMultiselectRoute
+  '/test-create-shortanswer': typeof TestCreateShortanswerRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
 }
 
@@ -122,6 +137,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/quizzes': typeof QuizzesRoute
   '/test-create-multiselect': typeof TestCreateMultiselectRoute
+  '/test-create-shortanswer': typeof TestCreateShortanswerRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
 }
 
@@ -132,6 +148,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/quizzes': typeof QuizzesRoute
   '/test-create-multiselect': typeof TestCreateMultiselectRoute
+  '/test-create-shortanswer': typeof TestCreateShortanswerRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
 }
 
@@ -143,6 +160,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/quizzes'
     | '/test-create-multiselect'
+    | '/test-create-shortanswer'
     | '/demo/tanstack-query'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -151,6 +169,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/quizzes'
     | '/test-create-multiselect'
+    | '/test-create-shortanswer'
     | '/demo/tanstack-query'
   id:
     | '__root__'
@@ -159,6 +178,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/quizzes'
     | '/test-create-multiselect'
+    | '/test-create-shortanswer'
     | '/demo/tanstack-query'
   fileRoutesById: FileRoutesById
 }
@@ -169,6 +189,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   QuizzesRoute: typeof QuizzesRoute
   TestCreateMultiselectRoute: typeof TestCreateMultiselectRoute
+  TestCreateShortanswerRoute: typeof TestCreateShortanswerRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
 }
 
@@ -178,6 +199,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   QuizzesRoute: QuizzesRoute,
   TestCreateMultiselectRoute: TestCreateMultiselectRoute,
+  TestCreateShortanswerRoute: TestCreateShortanswerRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
 }
 
@@ -196,6 +218,7 @@ export const routeTree = rootRoute
         "/profile",
         "/quizzes",
         "/test-create-multiselect",
+        "/test-create-shortanswer",
         "/demo/tanstack-query"
       ]
     },
@@ -213,6 +236,9 @@ export const routeTree = rootRoute
     },
     "/test-create-multiselect": {
       "filePath": "test-create-multiselect.tsx"
+    },
+    "/test-create-shortanswer": {
+      "filePath": "test-create-shortanswer.tsx"
     },
     "/demo/tanstack-query": {
       "filePath": "demo.tanstack-query.tsx"
