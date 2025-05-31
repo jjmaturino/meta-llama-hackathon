@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as TestCreateMultiselectImport } from './routes/test-create-multiselect'
 import { Route as QuizzesImport } from './routes/quizzes'
 import { Route as ProfileImport } from './routes/profile'
 import { Route as NotesImport } from './routes/notes'
@@ -18,6 +19,12 @@ import { Route as IndexImport } from './routes/index'
 import { Route as DemoTanstackQueryImport } from './routes/demo.tanstack-query'
 
 // Create/Update Routes
+
+const TestCreateMultiselectRoute = TestCreateMultiselectImport.update({
+  id: '/test-create-multiselect',
+  path: '/test-create-multiselect',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const QuizzesRoute = QuizzesImport.update({
   id: '/quizzes',
@@ -81,6 +88,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuizzesImport
       parentRoute: typeof rootRoute
     }
+    '/test-create-multiselect': {
+      id: '/test-create-multiselect'
+      path: '/test-create-multiselect'
+      fullPath: '/test-create-multiselect'
+      preLoaderRoute: typeof TestCreateMultiselectImport
+      parentRoute: typeof rootRoute
+    }
     '/demo/tanstack-query': {
       id: '/demo/tanstack-query'
       path: '/demo/tanstack-query'
@@ -98,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/notes': typeof NotesRoute
   '/profile': typeof ProfileRoute
   '/quizzes': typeof QuizzesRoute
+  '/test-create-multiselect': typeof TestCreateMultiselectRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
 }
 
@@ -106,6 +121,7 @@ export interface FileRoutesByTo {
   '/notes': typeof NotesRoute
   '/profile': typeof ProfileRoute
   '/quizzes': typeof QuizzesRoute
+  '/test-create-multiselect': typeof TestCreateMultiselectRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
 }
 
@@ -115,20 +131,34 @@ export interface FileRoutesById {
   '/notes': typeof NotesRoute
   '/profile': typeof ProfileRoute
   '/quizzes': typeof QuizzesRoute
+  '/test-create-multiselect': typeof TestCreateMultiselectRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/notes' | '/profile' | '/quizzes' | '/demo/tanstack-query'
+  fullPaths:
+    | '/'
+    | '/notes'
+    | '/profile'
+    | '/quizzes'
+    | '/test-create-multiselect'
+    | '/demo/tanstack-query'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/notes' | '/profile' | '/quizzes' | '/demo/tanstack-query'
+  to:
+    | '/'
+    | '/notes'
+    | '/profile'
+    | '/quizzes'
+    | '/test-create-multiselect'
+    | '/demo/tanstack-query'
   id:
     | '__root__'
     | '/'
     | '/notes'
     | '/profile'
     | '/quizzes'
+    | '/test-create-multiselect'
     | '/demo/tanstack-query'
   fileRoutesById: FileRoutesById
 }
@@ -138,6 +168,7 @@ export interface RootRouteChildren {
   NotesRoute: typeof NotesRoute
   ProfileRoute: typeof ProfileRoute
   QuizzesRoute: typeof QuizzesRoute
+  TestCreateMultiselectRoute: typeof TestCreateMultiselectRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
 }
 
@@ -146,6 +177,7 @@ const rootRouteChildren: RootRouteChildren = {
   NotesRoute: NotesRoute,
   ProfileRoute: ProfileRoute,
   QuizzesRoute: QuizzesRoute,
+  TestCreateMultiselectRoute: TestCreateMultiselectRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
 }
 
@@ -163,6 +195,7 @@ export const routeTree = rootRoute
         "/notes",
         "/profile",
         "/quizzes",
+        "/test-create-multiselect",
         "/demo/tanstack-query"
       ]
     },
@@ -177,6 +210,9 @@ export const routeTree = rootRoute
     },
     "/quizzes": {
       "filePath": "quizzes.tsx"
+    },
+    "/test-create-multiselect": {
+      "filePath": "test-create-multiselect.tsx"
     },
     "/demo/tanstack-query": {
       "filePath": "demo.tanstack-query.tsx"
