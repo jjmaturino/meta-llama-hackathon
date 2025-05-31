@@ -65,7 +65,6 @@ async function client<TResponse = any, DRequest = any>(
     .fetch(`${apiURL}/${endpoint}`, requestOptions)
     .then(async (response) => {
       if (response.status === 403) {
-        await auth.logout(); // If unauthorized, logout the user
         // Consistently return a rejected promise with a structured error
         return Promise.reject({
           message: 'Please re-authenticate.',
