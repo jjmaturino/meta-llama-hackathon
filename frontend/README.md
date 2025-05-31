@@ -1,3 +1,164 @@
+# Meta Llama Hackathon Frontend
+
+This is the frontend application for the Meta Llama Hackathon project. It's built with React, TypeScript, and Vite, featuring a modern UI with various interactive components.
+
+## Prerequisites
+
+- Node.js (v16 or higher)
+- npm (v7 or higher)
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone [your-repository-url]
+cd meta-llama-hackathon/frontend
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+## Key Dependencies
+
+The project uses the following major dependencies:
+
+### Core
+- React ^19.0.0
+- React DOM ^19.0.0
+- TypeScript ^5.8.3
+- Vite ^6.1.0
+- TailwindCSS ^4.0.6
+
+### Routing & Data Management
+- @tanstack/react-router ^1.114.3
+- @tanstack/react-query ^5.66.5
+- @tanstack/react-router-devtools ^1.114.3
+- @tanstack/react-query-devtools ^5.66.5
+
+### UI Components & Effects
+- canvas-confetti ^1.9.3 - For celebration effects
+- TailwindCSS utilities - For styling
+
+### Development Tools
+- @vitejs/plugin-react ^4.3.4
+- @tanstack/router-cli ^1.16.6
+- prettier ^3.5.3
+- vitest ^3.0.5
+- web-vitals ^4.2.4
+
+### Browser APIs
+- Web Speech API (built-in) - For voice input and transcription
+- Canvas API (built-in) - For visual effects
+
+## Features
+
+### Notes Page
+- Create and manage notes
+- Rich text editing capabilities
+
+### Quiz System
+1. Multiple Choice Quiz (`/test-create-multiselect`)
+   - Interactive question interface
+   - Progress tracking
+   - Score calculation
+
+2. Short Answer Quiz (`/test-create-shortanswer`)
+   - Voice input support (using Web Speech API)
+   - Real-time transcription
+   - Visual feedback:
+     - Confetti for high scores (≥70%)
+     - Rain and thunder effects for lower scores
+   - Score summary and detailed feedback
+
+### Profile Page
+- User information display
+- Statistics tracking
+- Recent activity feed
+
+## Available Scripts
+
+```bash
+# Start development server (port 3000)
+npm run dev
+# or
+npm start
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run serve
+
+# Run tests
+npm run test
+
+# Run linting
+npm run lint
+
+# Format code
+npm run format
+
+# Check and fix formatting/linting
+npm run check
+
+# Generate routes
+npm run generate:routes
+```
+
+## Browser Support
+
+The application uses modern web APIs including:
+- Web Speech API for voice recognition
+- Canvas API for visual effects
+
+Ensure your browser supports these features:
+- Chrome (recommended)
+- Firefox
+- Safari (latest version)
+- Edge (Chromium-based)
+
+## Environment Setup
+
+No environment variables are required for basic functionality. However, if you're integrating with the backend API, you might need to set up:
+
+```env
+VITE_API_URL=your_backend_url
+```
+
+## Project Structure
+
+```
+frontend/
+├── src/
+│   ├── routes/              # Route components
+│   ├── components/          # Reusable components
+│   ├── styles/              # CSS files
+│   ├── integrations/        # External integrations
+│   └── types/              # TypeScript declarations
+├── public/                 # Static assets
+└── package.json           # Project dependencies
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request
+
+## License
+
+[Your License]
+
+## Acknowledgments
+
+- TanStack Query & Router teams
+- Meta Llama team
+- All contributors
+
 Welcome to your new TanStack app! 
 
 # Getting Started
