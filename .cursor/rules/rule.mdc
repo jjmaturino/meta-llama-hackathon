@@ -1,0 +1,34 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+## Frontend
+
+* **Vite + React + TypeScript** - fastest setup
+* **Tailwind CSS** - rapid styling
+* **Regular React UseContext provider**
+
+### Key Libraries
+* **React Query/TanStack Query** - API calls and caching
+* **Tanstack Router**
+* **Slate.js** - Form handling for notes
+* **D3.js** - For relationship graphs
+* **Socket.io-client**
+* **Web Speech API** - activated with spacebar
+
+## Backend
+
+* **FastAPI**
+* **Uvicorn**
+
+### Key Libraries
+* **Llama API**
+* **Python-socketio**
+* **Pydantic**
+* **python-multipart** - file uploads if needed
+
+### Still to be chosen
+* **sentence-transformers** - for semantic similarity (note relationships)
+* **spacy or nltk** - text processing
+* **networkx** - graph analysis for note relationships

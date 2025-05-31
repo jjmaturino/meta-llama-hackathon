@@ -20,6 +20,16 @@ cd meta-llama-hackathon/frontend
 npm install
 ```
 
+3. Install additional required packages:
+```bash
+npm install canvas-confetti @types/canvas-confetti --save
+```
+
+4. Download the thunder sound effect:
+```bash
+mkdir -p public && curl -o public/thunder.mp3 https://assets.mixkit.co/active_storage/sfx/2515/2515-preview.mp3
+```
+
 ## Key Dependencies
 
 The project uses the following major dependencies:

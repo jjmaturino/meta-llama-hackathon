@@ -14,17 +14,17 @@ const mockQuestions: Question[] = [
   {
     id: 1,
     text: "Explain how photosynthesis works in simple terms.",
-    expectedAnswer: "Photosynthesis is the process where plants convert sunlight, water, and carbon dioxide into energy and oxygen."
+    expectedAnswer: "test"
   },
   {
     id: 2,
     text: "What are the main causes of climate change?",
-    expectedAnswer: "The main causes of climate change include greenhouse gas emissions, deforestation, and industrial pollution."
+    expectedAnswer: "test"
   },
   {
     id: 3,
     text: "Describe the water cycle.",
-    expectedAnswer: "The water cycle is the continuous movement of water through evaporation, condensation, precipitation, and collection in bodies of water."
+    expectedAnswer: "test"
   }
 ]
 
@@ -174,7 +174,7 @@ function TestCreateShortAnswerPage() {
         {isRaining && (
           <div className="absolute inset-0 pointer-events-none">
             <div className="rain">
-              {[...Array(10)].map((_, i) => (
+              {[...Array(20)].map((_, i) => (
                 <div key={i} className="raindrop" />
               ))}
             </div>
