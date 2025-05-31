@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
+import confetti from 'canvas-confetti'
 
 interface Question {
   id: number;
@@ -30,6 +31,32 @@ const mockQuestions: Question[] = [
   }
 ]
 
+// Function to trigger confetti
+const triggerConfetti = () => {
+  const duration = 3000;
+  const end = Date.now() + duration;
+
+  const frame = () => {
+    confetti({
+      particleCount: 2,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0, y: 0.8 }
+    });
+    confetti({
+      particleCount: 2,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1, y: 0.8 }
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  };
+  frame();
+};
+
 export const Route = createFileRoute('/test-create-multiselect')({
   component: TestCreatePage,
 })
@@ -38,6 +65,8 @@ function TestCreatePage() {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>(Array(mockQuestions.length).fill(-1))
   const [showResults, setShowResults] = useState(false)
+  const [isRaining, setIsRaining] = useState(false)
+  const [score, setScore] = useState(0)
 
   const handleAnswerSelect = (optionIndex: number) => {
     const newAnswers = [...selectedAnswers]
@@ -45,11 +74,29 @@ function TestCreatePage() {
     setSelectedAnswers(newAnswers)
   }
 
+  const calculateScore = () => {
+    const correctAnswers = selectedAnswers.reduce((score, answer, index) => {
+      return score + (answer === mockQuestions[index].correctAnswer ? 1 : 0)
+    }, 0)
+    return (correctAnswers / mockQuestions.length) * 100
+  }
+
   const handleNext = () => {
     if (currentQuestion < mockQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1)
     } else {
+      const finalScore = calculateScore()
+      setScore(finalScore)
       setShowResults(true)
+      
+      // Trigger effects based on score
+      if (finalScore >= 70) {
+        triggerConfetti()
+      } else {
+        setIsRaining(true)
+        // Play thunder sound
+        new Audio('/thunder.mp3').play().catch(() => {})
+      }
     }
   }
 
@@ -59,29 +106,53 @@ function TestCreatePage() {
     }
   }
 
-  const calculateScore = () => {
-    return selectedAnswers.reduce((score, answer, index) => {
-      return score + (answer === mockQuestions[index].correctAnswer ? 1 : 0)
-    }, 0)
-  }
-
   if (showResults) {
-    const score = calculateScore()
     return (
-      <div className="min-h-screen bg-gray-100 p-6">
+      <div className={`min-h-screen bg-gray-100 p-6 relative ${isRaining ? 'rain-effect' : ''}`}>
+        {isRaining && (
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="rain">
+              {[...Array(20)].map((_, i) => (
+                <div key={i} className="raindrop" />
+              ))}
+            </div>
+            <div className="lightning"></div>
+          </div>
+        )}
         <div className="max-w-3xl mx-auto">
           <div className="bg-white shadow rounded-lg p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Quiz Results</h2>
-            <p className="text-lg mb-4">
-              You scored {score} out of {mockQuestions.length} questions correctly!
-            </p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Quiz Complete!</h2>
+            <div className="text-center mb-8">
+              <div className="text-4xl font-bold mb-2">
+                {Math.round(score)}%
+              </div>
+              <div className="text-lg text-gray-600">
+                {score >= 70 ? 'Great job! 🎉' : 'Keep practicing! 💪'}
+              </div>
+            </div>
+            <div className="space-y-6">
+              {mockQuestions.map((question, index) => (
+                <div key={question.id} className="border-b pb-4">
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    Question {index + 1}: {question.text}
+                  </h3>
+                  <p className="text-gray-600 mb-2">
+                    Your answer: {question.options[selectedAnswers[index]]}
+                  </p>
+                  <p className="text-gray-600">
+                    Correct answer: {question.options[question.correctAnswer]}
+                  </p>
+                </div>
+              ))}
+            </div>
             <button
               onClick={() => {
                 setCurrentQuestion(0)
                 setSelectedAnswers(Array(mockQuestions.length).fill(-1))
                 setShowResults(false)
+                setIsRaining(false)
               }}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-500"
+              className="mt-6 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-500"
             >
               Try Again
             </button>
