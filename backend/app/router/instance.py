@@ -15,10 +15,3 @@ api_router.include_router(
     tags=["notes"],
     dependencies=[],
 )
-
-api_router.include_router(
-    users.router,
-    prefix="/users",
-    tags=["users"],
-    dependencies=[],
-)

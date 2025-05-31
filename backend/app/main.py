@@ -16,6 +16,7 @@ def get_application() -> FastAPI:
         api_router, prefix='/v1'
     )  # uses api router that is imported above
 
+    return application
 
 
 
