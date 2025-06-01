@@ -63,8 +63,8 @@ function ProfilePage() {
                 className="hidden"
               />
             </div>
-            <h2 className="mt-4 text-xl font-semibold text-gray-900">User Name</h2>
-            <p className="text-gray-500">user@example.com</p>
+            <h2 className="mt-4 text-xl font-semibold text-gray-900">Llambert</h2>
+            <p className="text-gray-500">Llambert@llama.com</p>
           </div>
         </div>
 
