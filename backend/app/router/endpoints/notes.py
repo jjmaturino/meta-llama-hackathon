@@ -47,3 +47,10 @@ def get_note_by_uuid_handler(uuid: int):
     if not note:
         raise HTTPException(status_code=404, detail="Note not found")
     return note
+
+@router.post("/{uuid}")
+def update_note(uuid: int, note: Note):
+    if uuid not in notes_store:
+        raise HTTPException(status_code=404, detail="Note not found")
+    notes_store[uuid] = note
+    return {"message": "Note updated successfully."}
