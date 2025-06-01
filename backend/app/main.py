@@ -1,6 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+from app.db import notes_db
 from app.router.instance import api_router
+from app.pydantic_models.notes import Note
+
+
+# Simple ID counters for each type
 
 
 def get_application() -> FastAPI:
@@ -27,8 +33,3 @@ def get_application() -> FastAPI:
 
 
 app = get_application()  # fastapi processes
-
-@app.get("/")
-def read_root():
-    return {"message": "Hello World"}
-
