@@ -5,12 +5,13 @@ from app.pydantic_models.question import Question
 from app.pydantic_models.quiz import Quiz
 
 notes_db: Dict[int, Note] = {}
+source_material_db: Dict[int, str] = {}
 questions_db: Dict[int, Question] = {}
 quizzes_db: Dict[int, Quiz] = {}
 next_note_id: int = 2
 next_question_id: int = 1
 next_quiz_id: int = 1
-
+next_source_material_id: int = 1
 # In-memory "databases"
 notes_db[0] = Note(
     id=0,

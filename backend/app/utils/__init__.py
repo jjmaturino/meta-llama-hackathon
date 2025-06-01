@@ -149,3 +149,13 @@ reasoning: {understanding_result.reason}\n
 
 Total score: {total_score}""")
     return total_score
+
+
+async def src_to_md(link: str) -> str:
+    app = AsyncFirecrawlApp(api_key=os.getenv("FIRECRAWL_API_KEY"))
+    response = await app.scrape_url(
+        url=link,		
+        formats= [ 'markdown' ],
+        only_main_content= True
+    )
+    return response.markdown
