@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useNotes } from '@/hooks/notes'
+import { useState, useRef } from 'react'
 
 export const Route = createFileRoute('/profile')({
   component: ProfilePage,
@@ -7,6 +8,23 @@ export const Route = createFileRoute('/profile')({
 
 function ProfilePage() {
   const { notes, isLoading } = useNotes();
+  const [profileImage, setProfileImage] = useState<string>('/llambert.png');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleEditClick = () => {
+    fileInputRef.current?.click();
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -17,29 +35,33 @@ function ProfilePage() {
         <div className="bg-white shadow rounded-lg p-6">
           <div className="flex flex-col items-center">
             <div className="relative">
-              <div className="h-32 w-32 rounded-full bg-gray-200 flex items-center justify-center">
-                <svg
-                  className="h-16 w-16 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
+              <div className="h-32 w-32 rounded-full overflow-hidden bg-gray-200">
+                <img
+                  src={profileImage}
+                  alt="Profile"
+                  className="h-full w-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/llambert.png';
+                  }}
+                />
               </div>
               <button
                 type="button"
+                onClick={handleEditClick}
                 className="absolute bottom-0 right-0 rounded-full bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-500 focus:outline-none"
               >
                 <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                 </svg>
               </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
             </div>
             <h2 className="mt-4 text-xl font-semibold text-gray-900">User Name</h2>
             <p className="text-gray-500">user@example.com</p>
