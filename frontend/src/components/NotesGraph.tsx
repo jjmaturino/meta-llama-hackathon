@@ -129,8 +129,8 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
     <div 
       className="fixed z-50"
       style={{
-        top: position.y - 30, // Position above the click point
-        left: position.x + 195, // Position slightly to the right of click point
+        top: position.y - 20, // Position above the click point
+        left: position.x + 180, // Position slightly to the right of click point
       }}
     >
       <div className="bg-white rounded-lg shadow-lg p-4 w-64 border border-gray-200">
