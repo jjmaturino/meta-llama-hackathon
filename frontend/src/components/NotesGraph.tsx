@@ -54,7 +54,18 @@ const HoverMenu: React.FC<HoverMenuProps> = ({ note, position, onClose, onRefres
       </div>
       
       <div className="mb-3">
-        <div className="text-sm font-medium text-gray-500 mb-1">Tags:</div>
+        <div className="flex justify-between items-center mb-1">
+          <div className="text-sm font-medium text-gray-500">Tags:</div>
+          <button
+            onClick={onRefresh}
+            className="p-1.5 text-gray-600 hover:text-gray-800 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+            aria-label="Refresh graph"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
+        </div>
         <div className="flex flex-wrap gap-1">
           {note.tags.map((tag, index) => (
             <span
@@ -67,6 +78,19 @@ const HoverMenu: React.FC<HoverMenuProps> = ({ note, position, onClose, onRefres
         </div>
       </div>
       
+      <div className="mb-4">
+        <div className="text-sm font-medium text-gray-500 mb-1">Note Accuracy:</div>
+        <div className="flex items-center">
+          <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-green-500 rounded-full"
+              style={{ width: `${note.accuracy || 0}%` }}
+            />
+          </div>
+          <span className="ml-2 text-sm text-gray-600">{note.accuracy || 0}%</span>
+        </div>
+      </div>
+      
       <div className="flex gap-2">
         <Link
           to="/quiz-selection"
@@ -75,15 +99,6 @@ const HoverMenu: React.FC<HoverMenuProps> = ({ note, position, onClose, onRefres
         >
           Start Quiz
         </Link>
-        <button
-          onClick={onRefresh}
-          className="p-1.5 text-gray-600 hover:text-gray-800 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
-          aria-label="Refresh graph"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-        </button>
       </div>
     </div>
   );
@@ -130,6 +145,15 @@ const NotesGraph: React.FC<NotesGraphProps> = ({ notes, onNodeClick, onRefresh =
     const height = svgRef.current.clientHeight;
     const svg = d3.select(svgRef.current);
 
+    // Add border rectangle
+    svg.append('rect')
+      .attr('width', width)
+      .attr('height', height)
+      .attr('fill', 'none')
+      .attr('stroke', '#e5e7eb')
+      .attr('stroke-width', 2)
+      .attr('rx', 8); // rounded corners
+
     // Create the simulation
     const simulation = d3.forceSimulation<GraphNode>(nodes)
       .force('link', d3.forceLink<GraphNode, GraphLink>(links)
@@ -137,7 +161,10 @@ const NotesGraph: React.FC<NotesGraphProps> = ({ notes, onNodeClick, onRefresh =
         .distance(100))
       .force('charge', d3.forceManyBody<GraphNode>().strength(-200))
       .force('center', d3.forceCenter<GraphNode>(width / 2, height / 2))
-      .force('collision', d3.forceCollide<GraphNode>().radius(d => d.radius + 10));
+      .force('collision', d3.forceCollide<GraphNode>().radius(d => d.radius + 10))
+      // Add boundary forces
+      .force('x', d3.forceX(width / 2).strength(0.1))
+      .force('y', d3.forceY(height / 2).strength(0.1));
 
     // Create the links
     const link = svg.append('g')
@@ -166,7 +193,7 @@ const NotesGraph: React.FC<NotesGraphProps> = ({ notes, onNodeClick, onRefresh =
         const note = notes.find(n => n.id === d.id);
         if (note) {
           setHoveredNote(note);
-          setMenuPosition({ x: 0, y: 0 }); // Position is fixed in the top-right
+          setMenuPosition({ x: 0, y: 0 });
         }
       });
 
@@ -191,6 +218,12 @@ const NotesGraph: React.FC<NotesGraphProps> = ({ notes, onNodeClick, onRefresh =
 
     // Update positions on each tick
     simulation.on('tick', () => {
+      // Constrain nodes within boundaries
+      nodes.forEach(node => {
+        node.x = Math.max(node.radius, Math.min(width - node.radius, node.x || 0));
+        node.y = Math.max(node.radius, Math.min(height - node.radius, node.y || 0));
+      });
+
       link
         .attr('x1', d => d.source.x || 0)
         .attr('y1', d => d.source.y || 0)
@@ -209,8 +242,8 @@ const NotesGraph: React.FC<NotesGraphProps> = ({ notes, onNodeClick, onRefresh =
     }
 
     function dragged(event: d3.D3DragEvent<SVGGElement, GraphNode, unknown>, d: GraphNode) {
-      d.fx = event.x;
-      d.fy = event.y;
+      d.fx = Math.max(d.radius, Math.min(width - d.radius, event.x));
+      d.fy = Math.max(d.radius, Math.min(height - d.radius, event.y));
     }
 
     function dragended(event: d3.D3DragEvent<SVGGElement, GraphNode, unknown>, d: GraphNode) {

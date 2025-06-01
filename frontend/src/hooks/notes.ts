@@ -5,11 +5,11 @@ import useClient from '../utils/client';
 export interface Note {
   id: string;
   title: string;
+  content: string;
   tags: string[];
-  cues: string;
-  notes: string;
-  summary: string;
-  docs: string[];
+  accuracy?: number;  // Percentage of correct answers in quizzes
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface NotesHookResult {
