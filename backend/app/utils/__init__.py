@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 load_dotenv()
 from app.pydantic_models.question import Question
 from app.pydantic_models.quiz import Quiz
-from pydantic import BaseModel, Field, model_validator, ValidationError
-from typing import List, Optional, Literal
+from app.pydantic_models.score import Score
+from typing import Literal
 
 
 
@@ -56,3 +56,96 @@ def create_questions(document: str, number_of_questions: int, question_type: Lit
 
         res = inference.choices[0].message.parsed.questions
         return res
+
+
+
+    
+
+
+
+def fact_judge(my_notes: str,sources_content: str) -> Score:
+    client = OpenAI(
+    api_key=os.environ.get("LLAMA_API_KEY"), 
+    base_url="https://api.llama.com/compat/v1/"
+)
+    completion = client.beta.chat.completions.parse(
+    model="Cerebras-Llama-4-Maverick-17B-128E-Instruct",
+    messages=[
+        {"role": "system", "content": """You judge the correctness of written notes based on source notes. 
+         Reminder that you only check correctness. Notes could be incomplete but don't worry about that.
+         You must give a score out of between 0 and 3 (0 being horrificly wrong, and 3 being correct) anywhere inbetween is a mix of correctness and incorrectness
+         written notes don't have to be 1-1 with the source notes, but be accurate with source notes"""},
+        {
+          "role": "user",
+          "content": f"generate a correctness score for the following written notes based on the source notes.\n\nSource notes: {sources_content}\n\nWritten notes: {my_notes}"
+        },
+    ],
+    response_format=Score,
+)
+    return completion.choices[0].message.parsed
+
+def completeness_judge(my_notes: str,sources_content: str) -> Score:
+    client = OpenAI(
+    api_key=os.environ.get("LLAMA_API_KEY"), 
+    base_url="https://api.llama.com/compat/v1/"
+)
+    completion = client.beta.chat.completions.parse(
+    model="Cerebras-Llama-4-Maverick-17B-128E-Instruct",
+    messages=[
+        {"role": "system", "content": """You judge the completeness of written notes based on source notes. 
+         Reminder that you only check completeness (if it covers the content of the source notes). Notes could be incorrect but don't worry about that.
+         You must give a score out of between 0 and 3 (0 being horrificly incomplete, and 3 being complete, anywhere inbetween is a mix of completeness and incompleteness)
+         Can be more lenient in terms of written notes don't have to be exactly the same as the source notes or have same depth/detail, just cover same content.
+         Be more punishing with missing content in terms of completeness. Lack of mention of important content is a big issue"""},
+        {
+          "role": "user",
+          "content": f"generate a completeness score for the following written notes based on the source notes.\n\nSource notes: {sources_content}\n\nWritten notes: {my_notes}"
+        },
+    ],
+    response_format=Score,
+)
+    return completion.choices[0].message.parsed
+
+
+def understanding_judge(my_notes: str,sources_content: str) -> Score:
+    client = OpenAI(
+    api_key=os.environ.get("LLAMA_API_KEY"), 
+    base_url="https://api.llama.com/compat/v1/"
+)
+    completion = client.beta.chat.completions.parse(
+    model="Cerebras-Llama-4-Maverick-17B-128E-Instruct",
+    messages=[
+        {"role": "system", "content": """You judge the understanding of written notes based on source notes. 
+         Reminder that you only check understanding. Rank understanding by how well concepts are explained
+         in their own words. Give a score out of between 0 and 3 (0 being horrificly wrong, and 3 being correct)
+         anywhere inbetween is a mix of understanding and misunderstanding.
+         An exact replication of the source notes is not the best understanding, but a good understanding is when the notes are
+         in their own words and the meaning is correct. Be more strict with note copying.""",
+        },
+        {
+          "role": "user",
+          "content": f"generate a understanding score for the following written notes based on the source notes.\n\nSource notes: {sources_content}\n\nWritten notes: {my_notes}"
+        },
+    ],
+    response_format=Score,
+)
+    return completion.choices[0].message.parsed
+
+
+
+def judge_all(my_notes: str,sources_content: str) -> Score:
+    fact_result = fact_judge(my_notes,sources_content)
+    completeness_result = completeness_judge(my_notes,sources_content)
+    understanding_result = understanding_judge(my_notes,sources_content)
+    total_score = (fact_result.score + completeness_result.score + understanding_result.score)
+    print(f"""Fact score: {fact_result.score}\n
+reasoning: {fact_result.reason}\n
+
+Completeness score: {completeness_result.score}\n
+reasoning: {completeness_result.reason}\n
+
+Understanding score: {understanding_result.score}\n
+reasoning: {understanding_result.reason}\n
+
+Total score: {total_score}""")
+    return total_score
