@@ -11,6 +11,7 @@ class Quiz(BaseModel):
     notes: List[int]
     type: str
     playermode: str
+    number_of_players: int
 
 class QuizResponse(BaseModel):
     questions: List[Tuple[bool, Question]]
