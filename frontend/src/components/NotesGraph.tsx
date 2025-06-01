@@ -79,7 +79,7 @@ const HoverMenu: React.FC<HoverMenuProps> = ({ note, position, onClose, onRefres
       </div>
       
       <div className="mb-4">
-        <div className="text-sm font-medium text-gray-500 mb-1">Note Accuracy:</div>
+        <div className="text-sm font-medium text-gray-500 mb-1">Comprehension Score:</div>
         <div className="flex items-center">
           <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
             <div 
