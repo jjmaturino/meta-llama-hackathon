@@ -7,7 +7,7 @@ from app.pydantic_models.question import Question
 from app.pydantic_models.quiz import Quiz
 from app.pydantic_models.score import Score
 from typing import Literal
-
+from firecrawl import AsyncFirecrawlApp
 
 
 

@@ -35,6 +35,7 @@ async def create_note_handler(request: CreateNoteRequest):
     for doc in request.docs:
         response_md = await src_to_md(doc)
         src_mat = SourceMaterial(
+            id=0,
             content=response_md
         )
         new_src_mat = create_source_material(src_mat)

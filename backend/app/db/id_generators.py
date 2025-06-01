@@ -1,4 +1,4 @@
-from app.db import next_note_id, next_question_id, next_quiz_id
+from app.db import next_note_id, next_question_id, next_quiz_id, next_source_material_id
 
 def generate_note_id() -> int:
     global next_note_id
