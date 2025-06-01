@@ -1,6 +1,6 @@
 # do something here bruh
 from pydantic import BaseModel, Field
-from typing import List, Union
+from typing import List, Union, Optional
 from .question import Question
 from .multiselect_question import MultiSelectQuestion
 
@@ -15,3 +15,4 @@ class Note(BaseModel):
     source_material_ids: List[int] = Field(default_factory=list,alias="source_material_ids", serialization_alias="source_material_ids") 
     questions: List[Question]
     comprehension_score: int = 0
+    relationships: Optional[List[int]] = []  # List of related note ID
