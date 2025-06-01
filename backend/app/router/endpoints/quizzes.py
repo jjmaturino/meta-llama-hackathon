@@ -6,7 +6,7 @@ from app.pydantic_models.quiz import Quiz
 from app.pydantic_models.question import Question
 from app.pydantic_models.multiselect_question import MultiSelectQuestion
 from pydantic import BaseModel
-from app.utils import create_questions
+from app.utils.tools import create_questions
 from app.db.notes import get_all_notes
 
 router = APIRouter()
