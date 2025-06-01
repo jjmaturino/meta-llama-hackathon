@@ -10,6 +10,8 @@ python = "^3.13"
 fastapi = "^0.115.12"
 uvicorn = {extras = ["standard"], version = "^0.34.2"}
 firecrawl-py = "^2.7.1"
+openai = "^1.82.1"
+python-socketio = "^5.13.0"
 
 
 [build-system]
