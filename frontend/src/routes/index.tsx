@@ -1,13 +1,15 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useNotes } from '@/hooks/notes'
 import NotesGraph from '@/components/NotesGraph'
+import useClient from '@/utils/client'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
 })
 
 function HomePage() {
-  const { notes, isLoading, error } = useNotes();
+  const { notes, isLoading, error, refetch } = useNotes();
+  const client = useClient();
 
   // Calculate tag counts
   const tagCounts = notes.reduce((acc: Record<string, number>, note) => {
@@ -21,6 +23,25 @@ function HomePage() {
   const sortedTags: Array<[string, number]> = Object.entries(tagCounts)
     .sort(([, countA], [, countB]) => countB - countA)
     .slice(0, 5);
+
+  const handleAcceptSuggestion = async (sourceId: string, targetId: string) => {
+    try {
+      // Make API call to create the relationship
+      await client('v1/notes/relationships', {
+        method: 'POST',
+        data: {
+          sourceId,
+          targetId,
+          type: 'manual'
+        }
+      });
+
+      // Refetch notes data to update the graph
+      await refetch();
+    } catch (error) {
+      console.error('Failed to create relationship:', error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -64,16 +85,8 @@ function HomePage() {
                   onNodeClick={(noteId) => {
                     window.location.href = `/notes/${noteId}`;
                   }}
-                  onRefresh={() => {
-                    // Refetch notes data
-                    window.location.reload();
-                  }}
-                  onAcceptSuggestion={(sourceId, targetId) => {
-                    // Here you would typically make an API call to create the relationship
-                    console.log(`Creating relationship between notes ${sourceId} and ${targetId}`);
-                    // For now, just reload to show the new relationship
-                    window.location.reload();
-                  }}
+                  onRefresh={() => refetch()}
+                  onAcceptSuggestion={handleAcceptSuggestion}
                 />
               )}
             </div>

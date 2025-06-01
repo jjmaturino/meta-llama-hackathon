@@ -131,7 +131,7 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
         </h3>
         <div className="text-gray-600 space-y-4 mb-6">
           <p>
-            The AI has detected a potential connection between these notes based on their content similarity:
+            Einstein has detected a potential connection between these notes based on their content similarity:
           </p>
           <div className="bg-indigo-50 rounded-lg p-4">
             <div className="mb-3">
@@ -184,6 +184,8 @@ const NotesGraph: React.FC<NotesGraphProps> = ({
   useEffect(() => {
     if (!svgRef.current || !notes.length) return;
 
+    console.log('Rendering graph with notes:', notes);
+
     // Clear any existing SVG content
     d3.select(svgRef.current).selectAll('*').remove();
 
@@ -200,36 +202,76 @@ const NotesGraph: React.FC<NotesGraphProps> = ({
     // Create links between notes based on shared tags and add suggested links for lonely nodes
     const links: GraphLink[] = [];
     const nodeConnections = new Map<string, number>();
+    const existingRelationships = new Set<string>();
 
-    // First, create regular links based on shared tags
+    // First, create regular links based on relationships
+    notes.forEach(note => {
+      if (note.relationships) {
+        note.relationships.forEach(relatedId => {
+          const relationshipKey = [note.id, relatedId].sort().join('-');
+          if (!existingRelationships.has(relationshipKey)) {
+            const relatedNode = nodes.find(n => n.id === relatedId);
+            if (relatedNode) {
+              console.log('Adding relationship link:', note.id, '→', relatedId);
+              links.push({
+                source: nodes.find(n => n.id === note.id)!,
+                target: relatedNode,
+                value: 1,
+                suggested: false
+              });
+              existingRelationships.add(relationshipKey);
+              // Count connections
+              nodeConnections.set(note.id, (nodeConnections.get(note.id) || 0) + 1);
+              nodeConnections.set(relatedId, (nodeConnections.get(relatedId) || 0) + 1);
+            }
+          }
+        });
+      }
+    });
+
+    // Then, create links based on shared tags (if not already connected)
     for (let i = 0; i < nodes.length; i++) {
       for (let j = i + 1; j < nodes.length; j++) {
+        const sourceNote = notes[i];
+        const targetNote = notes[j];
+        const relationshipKey = [sourceNote.id, targetNote.id].sort().join('-');
+        
+        // Skip if there's already a relationship
+        if (existingRelationships.has(relationshipKey)) {
+          continue;
+        }
+        
         const sharedTags = nodes[i].tags.filter(tag => nodes[j].tags.includes(tag));
         if (sharedTags.length > 0) {
+          console.log('Adding shared tags link:', sourceNote.id, '→', targetNote.id);
           links.push({
             source: nodes[i],
             target: nodes[j],
             value: sharedTags.length,
             suggested: false
           });
-          // Count connections for each node
+          existingRelationships.add(relationshipKey);
+          // Count connections
           nodeConnections.set(nodes[i].id, (nodeConnections.get(nodes[i].id) || 0) + 1);
           nodeConnections.set(nodes[j].id, (nodeConnections.get(nodes[j].id) || 0) + 1);
         }
       }
     }
 
-    // Then, add suggested links for lonely nodes
+    // Finally, add suggested links for lonely nodes
     nodes.forEach((node, i) => {
       if (!nodeConnections.has(node.id) || nodeConnections.get(node.id) === 0) {
         // Find the most relevant node to suggest a connection with
-        // For now, we'll just connect to the next node that has connections
-        // This is where you could add more sophisticated suggestion logic later
-        const suggestedPartner = nodes.find((n, index) => 
-          index !== i && nodeConnections.get(n.id) && nodeConnections.get(n.id)! > 0
-        );
+        const suggestedPartner = nodes.find((n, index) => {
+          if (index === i) return false;
+          const relationshipKey = [node.id, n.id].sort().join('-');
+          return !existingRelationships.has(relationshipKey) && 
+                 nodeConnections.get(n.id) && 
+                 nodeConnections.get(n.id)! > 0;
+        });
         
         if (suggestedPartner) {
+          console.log('Adding suggested link:', node.id, '→', suggestedPartner.id);
           links.push({
             source: node,
             target: suggestedPartner,
@@ -239,6 +281,8 @@ const NotesGraph: React.FC<NotesGraphProps> = ({
         }
       }
     });
+
+    console.log('Final links:', links);
 
     // Set up the SVG container
     const width = svgRef.current.clientWidth;
@@ -271,10 +315,22 @@ const NotesGraph: React.FC<NotesGraphProps> = ({
       .selectAll<SVGLineElement, GraphLink>('line')
       .data(links)
       .join('line')
-      .attr('stroke', d => d.suggested ? '#4f46e5' : '#999') // Use indigo for suggestions
-      .attr('stroke-opacity', d => d.suggested ? 0.7 : 0.6)
-      .attr('stroke-width', d => d.suggested ? 2 : Math.sqrt(d.value))
-      .style('stroke-dasharray', d => d.suggested ? '6, 3' : 'none')
+      .attr('stroke', d => {
+        if (d.suggested) return '#4f46e5';
+        return '#999';
+      })
+      .attr('stroke-opacity', d => {
+        if (d.suggested) return 0.7;
+        return 0.6;
+      })
+      .attr('stroke-width', d => {
+        if (d.suggested) return 2;
+        return Math.sqrt(d.value);
+      })
+      .style('stroke-dasharray', d => {
+        if (d.suggested) return '6, 3';
+        return 'none';
+      })
       .style('cursor', d => d.suggested ? 'pointer' : 'default')
       .on('mouseover', (_event, d) => {
         if (d.suggested) {

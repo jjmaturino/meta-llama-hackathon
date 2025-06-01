@@ -14,12 +14,14 @@ export interface Note {
   notes: string;
   summary: string;
   docs: string[];
+  relationships?: string[];  // List of related note IDs
 }
 
 interface NotesHookResult {
   notes: Note[];
   isLoading: boolean;
   error: Error | null;
+  refetch: () => Promise<Note[]>;
 }
 
 function useNotes(options: Partial<UseQueryOptions<Note[], Error>> = {}): NotesHookResult {
@@ -54,6 +56,10 @@ function useNotes(options: Partial<UseQueryOptions<Note[], Error>> = {}): NotesH
     notes: result.data ?? [],
     isLoading: result.isLoading,
     error: result.error,
+    refetch: async () => {
+      const { data } = await result.refetch();
+      return data ?? [];
+    }
   };
 }
 
