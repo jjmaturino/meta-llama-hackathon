@@ -10,6 +10,10 @@ export interface Note {
   accuracy?: number;  // Percentage of correct answers in quizzes
   createdAt: string;
   updatedAt: string;
+  cues: string;
+  notes: string;
+  summary: string;
+  docs: string[];
 }
 
 interface NotesHookResult {

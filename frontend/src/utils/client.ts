@@ -19,12 +19,6 @@ interface ClientConfig<D = any> {
   // if customConfig is meant to only pass through other RequestInit options.
 }
 
-// Define the structure of a successful API error response, if known
-interface ApiErrorResponse {
-  message: string;
-  code?: number;
-  // ... other potential error fields
-}
 
 async function client<TResponse = any, DRequest = any>(
   endpoint: string,

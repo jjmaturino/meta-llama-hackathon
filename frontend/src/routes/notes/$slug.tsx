@@ -55,20 +55,9 @@ function RouteComponent() {
   const primaryRefs = note.docs.filter(doc => doc.includes('jalammar.github.io'));
   const secondaryRefs = note.docs.filter(doc => doc.includes('arxiv.org'));
 
-  // Extract links from notes for categorization
-  const extractLinks = (text: string) => {
-    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-    const matches = [...text.matchAll(linkRegex)];
-    return matches.map(match => ({
-      title: match[1],
-      url: match[2]
-    }));
-  };
 
-  const inlineLinks = {
-    primary: extractLinks(note.notes),
-    secondary: extractLinks(note.cues)
-  };
+
+
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -191,7 +180,7 @@ function RouteComponent() {
               {showQuestions ? (
                 <div className="space-y-4">
                   {questions.length > 0 ? (
-                    questions.map((question, index) => (
+                    questions.map((question: string, index: number) => (
                       <div key={index} className="p-4 bg-gray-50 rounded-lg">
                         <p className="font-medium text-gray-900">Q{index + 1}: {question}</p>
                       </div>
@@ -216,7 +205,7 @@ function RouteComponent() {
           <div className="mb-6">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Primary Sources</h3>
             <ul className="space-y-2">
-              {primaryRefs.map((doc, index) => (
+              {primaryRefs.map((doc: string, index: number) => (
                 <li key={index}>
                   <a
                     href={doc}
@@ -237,7 +226,7 @@ function RouteComponent() {
           <div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">Secondary Sources</h3>
             <ul className="space-y-2">
-              {secondaryRefs.map((doc, index) => (
+              {secondaryRefs.map((doc: string, index: number) => (
                 <li key={index}>
                   <a
                     href={doc}

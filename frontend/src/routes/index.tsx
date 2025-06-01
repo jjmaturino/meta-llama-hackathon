@@ -68,6 +68,12 @@ function HomePage() {
                     // Refetch notes data
                     window.location.reload();
                   }}
+                  onAcceptSuggestion={(sourceId, targetId) => {
+                    // Here you would typically make an API call to create the relationship
+                    console.log(`Creating relationship between notes ${sourceId} and ${targetId}`);
+                    // For now, just reload to show the new relationship
+                    window.location.reload();
+                  }}
                 />
               )}
             </div>
