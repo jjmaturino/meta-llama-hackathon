@@ -1,10 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useNotes } from '@/hooks/notes'
 
 export const Route = createFileRoute('/profile')({
   component: ProfilePage,
 })
 
 function ProfilePage() {
+  const { notes, isLoading } = useNotes();
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Profile</h1>
@@ -51,7 +54,13 @@ function ProfilePage() {
               <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div className="bg-gray-50 px-4 py-5 rounded-lg sm:p-6">
                   <dt className="text-sm font-medium text-gray-500">Total Notes</dt>
-                  <dd className="mt-1 text-3xl font-semibold text-gray-900">0</dd>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">
+                    {isLoading ? (
+                      <div className="animate-pulse h-8 w-8 bg-gray-200 rounded"></div>
+                    ) : (
+                      notes.length
+                    )}
+                  </dd>
                 </div>
                 <div className="bg-gray-50 px-4 py-5 rounded-lg sm:p-6">
                   <dt className="text-sm font-medium text-gray-500">Completed Quizzes</dt>
