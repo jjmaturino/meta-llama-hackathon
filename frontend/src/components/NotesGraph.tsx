@@ -95,10 +95,10 @@ const HoverMenu: React.FC<HoverMenuProps> = ({ note, position, onClose, onRefres
           <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
             <div 
               className="h-full bg-green-500 rounded-full"
-              style={{ width: `${note.accuracy || 0}%` }}
+              style={{ width: `${note.accuracy || 50}%` }}
             />
           </div>
-          <span className="ml-2 text-sm text-gray-600">{note.accuracy || 0}%</span>
+          <span className="ml-2 text-sm text-gray-600">{note.accuracy || 50}%</span>
         </div>
       </div>
       

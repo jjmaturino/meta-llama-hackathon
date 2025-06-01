@@ -15,6 +15,7 @@ export interface Note {
   summary: string;
   docs: string[];
   relationships?: string[];  // List of related note IDs
+  comprehension_score?: number;  // Overall comprehension score
 }
 
 interface NotesHookResult {
