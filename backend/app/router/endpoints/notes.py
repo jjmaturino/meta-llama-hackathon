@@ -8,8 +8,8 @@ from pydantic import BaseModel
 from app.db.notes import get_all_notes, get_note, create_note
 from app.db.id_generators import generate_note_id
 
-from app.utils import fact_judge, completeness_judge, understanding_judge, judge_all, src_to_md
-
+from app.utils.tools import fact_judge, completeness_judge, understanding_judge, judge_all, src_to_md
+from app.db.source_mat import get_source_material
 import requests
 
 import asyncio
@@ -81,8 +81,13 @@ def update_note(uuid: int, note: Note):
 async def calculate_comprehension_score(uuid: int):
     note = get_note(uuid)
 
-    content = []
+    content = ""
+    for id in note.source_material_ids:
+        content += get_source_material(id).content
 
+    score = judge_all(note.notes, content)
+    note.comprehension_score = score
+    #update_note(uuid, note)
 
     if not note:
         raise HTTPException(status_code=404, detail="Note not found")
