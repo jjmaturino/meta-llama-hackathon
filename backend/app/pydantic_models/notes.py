@@ -12,4 +12,4 @@ class Note(BaseModel):
     notes: str
     summary: str
     docs: List[str]
-    questions: List[Union[Question, MultiSelectQuestion]]
+    questions: List[Question]

@@ -5,9 +5,15 @@ from .multiselect_question import MultiSelectQuestion
 
 class Quiz(BaseModel):
     ID: str
-    questions: List[Tuple[bool, Union[Question, MultiSelectQuestion]]]
+    questions: List[Question]
     score: int
-    notes: List[str]
+    notes: List[int]
     type: str
     playermode: str
 
+class QuizResponse(BaseModel):
+    questions: List[Tuple[bool, Question]]
+    score: int
+    notes: List[int]
+    type: str
+    playermode: str
