@@ -53,4 +53,49 @@ function useNotes(options: Partial<UseQueryOptions<Note[], Error>> = {}): NotesH
   };
 }
 
-export { useNotes }
+
+interface NoteHookResult {
+  note: Note;
+  isLoading: boolean;
+  error: Error | null;
+}
+
+function useNote(noteId: string, options: Partial<UseQueryOptions<Note, Error>> = {}): NoteHookResult {
+  const queryClient = useQueryClient();
+  const client = useClient();
+
+
+  const result = useQuery<Note, Error>({
+    ...options,
+    queryKey: ['notes', noteId],
+    queryFn: async () => {
+      try {
+        // First try to get from cache
+        const cachedNote = queryClient.getQueryData<Note>(['notes', noteId]);
+        if (cachedNote) {
+          return cachedNote;
+        }
+
+        // If not in cache, get from mock data
+        const response = await client('v1/notes/' + noteId);
+        if (!response) {
+          throw new Error(`Note with id ${noteId} not found`);
+        }
+        return response;
+      } catch (error) {
+        console.error(`Failed to fetch note ${noteId}:`, error);
+        throw error;
+      }
+    },
+    retry: 1,
+  });
+
+  return {
+    note: result.data as Note,
+    isLoading: result.isLoading,
+    error: result.error,
+  };
+}
+
+
+export { useNotes, useNote }

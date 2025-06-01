@@ -14,9 +14,12 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as TestCreateShortanswerImport } from './routes/test-create-shortanswer'
 import { Route as TestCreateMultiselectImport } from './routes/test-create-multiselect'
 import { Route as QuizzesImport } from './routes/quizzes'
+import { Route as QuizSelectionImport } from './routes/quiz-selection'
 import { Route as ProfileImport } from './routes/profile'
-import { Route as NotesImport } from './routes/notes'
 import { Route as IndexImport } from './routes/index'
+import { Route as QuizzesIndexImport } from './routes/quizzes/index'
+import { Route as NotesIndexImport } from './routes/notes/index'
+import { Route as NotesSlugImport } from './routes/notes/$slug'
 import { Route as DemoTanstackQueryImport } from './routes/demo.tanstack-query'
 
 // Create/Update Routes
@@ -39,21 +42,39 @@ const QuizzesRoute = QuizzesImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const QuizSelectionRoute = QuizSelectionImport.update({
+  id: '/quiz-selection',
+  path: '/quiz-selection',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const ProfileRoute = ProfileImport.update({
   id: '/profile',
   path: '/profile',
   getParentRoute: () => rootRoute,
 } as any)
 
-const NotesRoute = NotesImport.update({
-  id: '/notes',
-  path: '/notes',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const QuizzesIndexRoute = QuizzesIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => QuizzesRoute,
+} as any)
+
+const NotesIndexRoute = NotesIndexImport.update({
+  id: '/notes/',
+  path: '/notes/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const NotesSlugRoute = NotesSlugImport.update({
+  id: '/notes/$slug',
+  path: '/notes/$slug',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -74,18 +95,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/notes': {
-      id: '/notes'
-      path: '/notes'
-      fullPath: '/notes'
-      preLoaderRoute: typeof NotesImport
-      parentRoute: typeof rootRoute
-    }
     '/profile': {
       id: '/profile'
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileImport
+      parentRoute: typeof rootRoute
+    }
+    '/quiz-selection': {
+      id: '/quiz-selection'
+      path: '/quiz-selection'
+      fullPath: '/quiz-selection'
+      preLoaderRoute: typeof QuizSelectionImport
       parentRoute: typeof rootRoute
     }
     '/quizzes': {
@@ -116,91 +137,143 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoTanstackQueryImport
       parentRoute: typeof rootRoute
     }
+    '/notes/$slug': {
+      id: '/notes/$slug'
+      path: '/notes/$slug'
+      fullPath: '/notes/$slug'
+      preLoaderRoute: typeof NotesSlugImport
+      parentRoute: typeof rootRoute
+    }
+    '/notes/': {
+      id: '/notes/'
+      path: '/notes'
+      fullPath: '/notes'
+      preLoaderRoute: typeof NotesIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/quizzes/': {
+      id: '/quizzes/'
+      path: '/'
+      fullPath: '/quizzes/'
+      preLoaderRoute: typeof QuizzesIndexImport
+      parentRoute: typeof QuizzesImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface QuizzesRouteChildren {
+  QuizzesIndexRoute: typeof QuizzesIndexRoute
+}
+
+const QuizzesRouteChildren: QuizzesRouteChildren = {
+  QuizzesIndexRoute: QuizzesIndexRoute,
+}
+
+const QuizzesRouteWithChildren =
+  QuizzesRoute._addFileChildren(QuizzesRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/notes': typeof NotesRoute
   '/profile': typeof ProfileRoute
-  '/quizzes': typeof QuizzesRoute
+  '/quiz-selection': typeof QuizSelectionRoute
+  '/quizzes': typeof QuizzesRouteWithChildren
   '/test-create-multiselect': typeof TestCreateMultiselectRoute
   '/test-create-shortanswer': typeof TestCreateShortanswerRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/notes/$slug': typeof NotesSlugRoute
+  '/notes': typeof NotesIndexRoute
+  '/quizzes/': typeof QuizzesIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/notes': typeof NotesRoute
   '/profile': typeof ProfileRoute
-  '/quizzes': typeof QuizzesRoute
+  '/quiz-selection': typeof QuizSelectionRoute
   '/test-create-multiselect': typeof TestCreateMultiselectRoute
   '/test-create-shortanswer': typeof TestCreateShortanswerRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/notes/$slug': typeof NotesSlugRoute
+  '/notes': typeof NotesIndexRoute
+  '/quizzes': typeof QuizzesIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/notes': typeof NotesRoute
   '/profile': typeof ProfileRoute
-  '/quizzes': typeof QuizzesRoute
+  '/quiz-selection': typeof QuizSelectionRoute
+  '/quizzes': typeof QuizzesRouteWithChildren
   '/test-create-multiselect': typeof TestCreateMultiselectRoute
   '/test-create-shortanswer': typeof TestCreateShortanswerRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/notes/$slug': typeof NotesSlugRoute
+  '/notes/': typeof NotesIndexRoute
+  '/quizzes/': typeof QuizzesIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/notes'
     | '/profile'
+    | '/quiz-selection'
     | '/quizzes'
     | '/test-create-multiselect'
     | '/test-create-shortanswer'
     | '/demo/tanstack-query'
+    | '/notes/$slug'
+    | '/notes'
+    | '/quizzes/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/notes'
     | '/profile'
-    | '/quizzes'
+    | '/quiz-selection'
     | '/test-create-multiselect'
     | '/test-create-shortanswer'
     | '/demo/tanstack-query'
+    | '/notes/$slug'
+    | '/notes'
+    | '/quizzes'
   id:
     | '__root__'
     | '/'
-    | '/notes'
     | '/profile'
+    | '/quiz-selection'
     | '/quizzes'
     | '/test-create-multiselect'
     | '/test-create-shortanswer'
     | '/demo/tanstack-query'
+    | '/notes/$slug'
+    | '/notes/'
+    | '/quizzes/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  NotesRoute: typeof NotesRoute
   ProfileRoute: typeof ProfileRoute
-  QuizzesRoute: typeof QuizzesRoute
+  QuizSelectionRoute: typeof QuizSelectionRoute
+  QuizzesRoute: typeof QuizzesRouteWithChildren
   TestCreateMultiselectRoute: typeof TestCreateMultiselectRoute
   TestCreateShortanswerRoute: typeof TestCreateShortanswerRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
+  NotesSlugRoute: typeof NotesSlugRoute
+  NotesIndexRoute: typeof NotesIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  NotesRoute: NotesRoute,
   ProfileRoute: ProfileRoute,
-  QuizzesRoute: QuizzesRoute,
+  QuizSelectionRoute: QuizSelectionRoute,
+  QuizzesRoute: QuizzesRouteWithChildren,
   TestCreateMultiselectRoute: TestCreateMultiselectRoute,
   TestCreateShortanswerRoute: TestCreateShortanswerRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
+  NotesSlugRoute: NotesSlugRoute,
+  NotesIndexRoute: NotesIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -214,25 +287,30 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/notes",
         "/profile",
+        "/quiz-selection",
         "/quizzes",
         "/test-create-multiselect",
         "/test-create-shortanswer",
-        "/demo/tanstack-query"
+        "/demo/tanstack-query",
+        "/notes/$slug",
+        "/notes/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/notes": {
-      "filePath": "notes.tsx"
-    },
     "/profile": {
       "filePath": "profile.tsx"
     },
+    "/quiz-selection": {
+      "filePath": "quiz-selection.tsx"
+    },
     "/quizzes": {
-      "filePath": "quizzes.tsx"
+      "filePath": "quizzes.tsx",
+      "children": [
+        "/quizzes/"
+      ]
     },
     "/test-create-multiselect": {
       "filePath": "test-create-multiselect.tsx"
@@ -242,6 +320,16 @@ export const routeTree = rootRoute
     },
     "/demo/tanstack-query": {
       "filePath": "demo.tanstack-query.tsx"
+    },
+    "/notes/$slug": {
+      "filePath": "notes/$slug.tsx"
+    },
+    "/notes/": {
+      "filePath": "notes/index.tsx"
+    },
+    "/quizzes/": {
+      "filePath": "quizzes/index.tsx",
+      "parent": "/quizzes"
     }
   }
 }

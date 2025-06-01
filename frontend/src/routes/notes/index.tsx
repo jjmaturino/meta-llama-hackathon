@@ -1,7 +1,7 @@
 import { useNotes, type Note } from '@/hooks/notes'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/notes')({
+export const Route = createFileRoute('/notes/')({
   component: NotesPage,
 })
 
@@ -76,7 +76,11 @@ function NotesPage() {
           {notes.map((note: Note) => (
             <div key={note.id} className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow duration-200">
               <div className="flex justify-between items-start">
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">{note.title}</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                  <Link to="/notes/$slug" params={{ slug: note.id }} className="hover:text-indigo-600">
+                    {note.title}
+                  </Link>
+                </h2>
                 <div className="flex flex-wrap gap-2">
                   {note.tags.map((tag: string, tagIndex: number) => (
                     <span
@@ -90,12 +94,13 @@ function NotesPage() {
               </div>
               <p className="text-gray-600 mb-4 line-clamp-3">{note.summary}</p>
               <div className="flex justify-between items-center">
-                <a
-                  href={`/notes/${note.id}`}
+                <Link
+                  to="/notes/$slug"
+                  params={{ slug: note.id }}
                   className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
                 >
                   View Details
-                </a>
+                </Link>
                 <div className="text-gray-400 text-sm">
                   {note.docs.length} reference{note.docs.length !== 1 ? 's' : ''}
                 </div>
