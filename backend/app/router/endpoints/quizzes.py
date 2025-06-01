@@ -30,7 +30,7 @@ def create_quiz_handler(request: CreateQuizRequest):
 
 
     quiz = Quiz(
-        ID = "",    
+        ID = 0,    
         questions=new_questions,
         are_q_answered=q_answered,
         score=0,
@@ -43,7 +43,7 @@ def create_quiz_handler(request: CreateQuizRequest):
     return new_quiz
 
 @router.get("/{quiz_id}")
-def get_quiz_handler(quiz_id: str):
+def get_quiz_handler(quiz_id: int):
     quiz = get_quiz(quiz_id)
 
     if not quiz:

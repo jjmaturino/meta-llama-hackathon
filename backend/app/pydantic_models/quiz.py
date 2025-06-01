@@ -4,8 +4,9 @@ from .question import Question
 from .multiselect_question import MultiSelectQuestion
 
 class Quiz(BaseModel):
-    ID: str
+    ID: int
     questions: List[Question]
+    are_q_answered: List[bool]
     score: int
     notes: List[int]
     type: str
