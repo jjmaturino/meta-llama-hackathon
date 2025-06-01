@@ -17,7 +17,6 @@ def create_questions(document: str, number_of_questions: int, question_type: Lit
     api_key=os.environ.get("LLAMA_API_KEY"), 
     base_url="https://api.llama.com/compat/v1/"
 )
-    print(document)
     if question_type == "short":
         # prompt here for generating x short answer questions
         inference = client.beta.chat.completions.parse(

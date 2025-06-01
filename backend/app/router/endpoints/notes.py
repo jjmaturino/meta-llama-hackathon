@@ -50,6 +50,7 @@ def get_note_by_uuid_handler(uuid: int):
 
 @router.post("/{uuid}")
 def update_note(uuid: int, note: Note):
+    notes_store = get_all_notes()
     if uuid not in notes_store:
         raise HTTPException(status_code=404, detail="Note not found")
     notes_store[uuid] = note

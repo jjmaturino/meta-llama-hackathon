@@ -5,7 +5,7 @@ from typing import Optional, List
 
 # --- CRUD Operations for Quizzes ---
 def create_quiz(quiz: Quiz) -> Quiz:
-    if quiz.ID == "":
+    if quiz.ID == 0 or quiz.ID is None:
         quiz.ID = generate_quiz_id()
 
     quizzes_db[quiz.ID] = quiz
