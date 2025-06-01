@@ -16,6 +16,7 @@ import { Route as TestCreateMultiselectImport } from './routes/test-create-multi
 import { Route as QuizzesImport } from './routes/quizzes'
 import { Route as QuizSelectionImport } from './routes/quiz-selection'
 import { Route as ProfileImport } from './routes/profile'
+import { Route as GameModeImport } from './routes/game-mode'
 import { Route as IndexImport } from './routes/index'
 import { Route as QuizzesIndexImport } from './routes/quizzes/index'
 import { Route as NotesIndexImport } from './routes/notes/index'
@@ -51,6 +52,12 @@ const QuizSelectionRoute = QuizSelectionImport.update({
 const ProfileRoute = ProfileImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const GameModeRoute = GameModeImport.update({
+  id: '/game-mode',
+  path: '/game-mode',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -93,6 +100,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/game-mode': {
+      id: '/game-mode'
+      path: '/game-mode'
+      fullPath: '/game-mode'
+      preLoaderRoute: typeof GameModeImport
       parentRoute: typeof rootRoute
     }
     '/profile': {
@@ -176,6 +190,7 @@ const QuizzesRouteWithChildren =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/game-mode': typeof GameModeRoute
   '/profile': typeof ProfileRoute
   '/quiz-selection': typeof QuizSelectionRoute
   '/quizzes': typeof QuizzesRouteWithChildren
@@ -189,6 +204,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/game-mode': typeof GameModeRoute
   '/profile': typeof ProfileRoute
   '/quiz-selection': typeof QuizSelectionRoute
   '/test-create-multiselect': typeof TestCreateMultiselectRoute
@@ -202,6 +218,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/game-mode': typeof GameModeRoute
   '/profile': typeof ProfileRoute
   '/quiz-selection': typeof QuizSelectionRoute
   '/quizzes': typeof QuizzesRouteWithChildren
@@ -217,6 +234,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/game-mode'
     | '/profile'
     | '/quiz-selection'
     | '/quizzes'
@@ -229,6 +247,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/game-mode'
     | '/profile'
     | '/quiz-selection'
     | '/test-create-multiselect'
@@ -240,6 +259,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/game-mode'
     | '/profile'
     | '/quiz-selection'
     | '/quizzes'
@@ -254,6 +274,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GameModeRoute: typeof GameModeRoute
   ProfileRoute: typeof ProfileRoute
   QuizSelectionRoute: typeof QuizSelectionRoute
   QuizzesRoute: typeof QuizzesRouteWithChildren
@@ -266,6 +287,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GameModeRoute: GameModeRoute,
   ProfileRoute: ProfileRoute,
   QuizSelectionRoute: QuizSelectionRoute,
   QuizzesRoute: QuizzesRouteWithChildren,
@@ -287,6 +309,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/game-mode",
         "/profile",
         "/quiz-selection",
         "/quizzes",
@@ -299,6 +322,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/game-mode": {
+      "filePath": "game-mode.tsx"
     },
     "/profile": {
       "filePath": "profile.tsx"

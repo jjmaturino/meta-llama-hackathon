@@ -28,8 +28,8 @@ function QuizSelectionPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Multiple Choice Quiz Card */}
           <Link
-            to="/test-create-multiselect"
-            search={{ noteId }}
+            to="/game-mode"
+            search={{ noteId, quizType: 'multiselect' }}
             className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1"
           >
             <div className="p-6">
@@ -47,8 +47,8 @@ function QuizSelectionPage() {
 
           {/* Short Answer Quiz Card */}
           <Link
-            to="/test-create-shortanswer"
-            search={{ noteId }}
+            to="/game-mode"
+            search={{ noteId, quizType: 'shortanswer' }}
             className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1"
           >
             <div className="p-6">

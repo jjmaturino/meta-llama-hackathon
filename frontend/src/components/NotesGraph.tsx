@@ -36,8 +36,8 @@ const HoverMenu: React.FC<HoverMenuProps> = ({ note, position, onClose, onRefres
     <div
       className="absolute bg-white rounded-bl-lg shadow-lg p-4 w-64 z-50 border-b border-l border-gray-200"
       style={{
-        top: -70,
-        right: -30,
+        top: -60,
+        right: -20,
       }}
     >
       <div className="flex justify-between items-start mb-3">
