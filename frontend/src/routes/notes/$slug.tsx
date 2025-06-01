@@ -52,8 +52,8 @@ function RouteComponent() {
     .map(line => line.replace('Question:', '').trim())
 
   // Categorize references
-  const primaryRefs = note.docs.filter(doc => doc.includes('jalammar.github.io'));
-  const secondaryRefs = note.docs.filter(doc => doc.includes('arxiv.org'));
+  const primaryRefs = note.source_material.filter(doc => doc.includes('jalammar.github.io'));
+  const secondaryRefs = note.source_material.filter(doc => doc.includes('arxiv.org'));
 
 
 
@@ -73,10 +73,10 @@ function RouteComponent() {
               {tag}
             </span>
           ))}
-          
+
           {/* Dropdown */}
-          <div 
-            className="relative ml-2 group" 
+          <div
+            className="relative ml-2 group"
             onMouseEnter={() => setShowDropdown(true)}
             onMouseLeave={() => setShowDropdown(false)}
           >
@@ -84,20 +84,19 @@ function RouteComponent() {
               className="px-4 py-1 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors flex items-center gap-2 text-sm"
             >
               <span>Quick Links</span>
-              <svg 
-                className={`w-4 h-4 transition-transform ${showDropdown ? 'rotate-180' : ''}`} 
-                fill="none" 
-                stroke="currentColor" 
+              <svg
+                className={`w-4 h-4 transition-transform ${showDropdown ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
                 viewBox="0 0 24 24"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
-            
-            <div 
-              className={`absolute left-0 w-96 bg-white rounded-md shadow-lg z-10 border border-gray-200 transition-opacity duration-150 ${
-                showDropdown ? 'opacity-100 visible' : 'opacity-0 invisible'
-              }`}
+
+            <div
+              className={`absolute left-0 w-96 bg-white rounded-md shadow-lg z-10 border border-gray-200 transition-opacity duration-150 ${showDropdown ? 'opacity-100 visible' : 'opacity-0 invisible'
+                }`}
               style={{ top: 'calc(100% - 2px)' }} // Remove the gap
             >
               {/* Primary Links */}
@@ -118,7 +117,7 @@ function RouteComponent() {
                   ))}
                 </ul>
               </div>
-              
+
               {/* Secondary Links */}
               <div className="p-4">
                 <h3 className="text-sm font-semibold text-gray-900 mb-2">Secondary Sources</h3>
@@ -220,7 +219,7 @@ function RouteComponent() {
             </ul>
           </div>
         )}
-        
+
         {/* Secondary References */}
         {secondaryRefs.length > 0 && (
           <div>

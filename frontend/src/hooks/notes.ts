@@ -14,6 +14,7 @@ export interface Note {
   notes: string;
   summary: string;
   docs: string[];
+  source_material: string[];
   relationships?: string[];  // List of related note IDs
   comprehension_score?: number;  // Overall comprehension score
 }

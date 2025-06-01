@@ -95,7 +95,7 @@ function NotesPage() {
                   View Details
                 </span>
                 <div className="text-gray-400 text-sm">
-                  {note.docs.length} reference{note.docs.length !== 1 ? 's' : ''}
+                  {note.source_material.length} reference{note.source_material.length !== 1 ? 's' : ''}
                 </div>
               </div>
             </Link>
