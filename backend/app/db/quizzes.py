@@ -1,7 +1,13 @@
+from app.main import quizzes_db
+from app.pydantic_models.quiz import Quiz
+from app.db.id_generators import generate_quiz_id
+from typing import Optional, List
+
 # --- CRUD Operations for Quizzes ---
 def create_quiz(quiz: Quiz) -> Quiz:
     if quiz.id is None:
         quiz.id = generate_quiz_id()
+
     quizzes_db[quiz.id] = quiz
     return quiz
 

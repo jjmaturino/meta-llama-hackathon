@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.router.instance import api_router
+from typing import Dict
+from app.pydantic_models.notes import Note
+from app.pydantic_models.question import Question
+from app.pydantic_models.quiz import Quiz
 
 
 # In-memory "databases"

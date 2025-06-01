@@ -33,17 +33,11 @@ api_router.include_router(
     dependencies=[],
 )
 
-api_router.include_router(
-    answers.router,
-    prefix="/answers",
-    tags=["answers"],
-    dependencies=[],
-)
 
 api_router.include_router(
     quizes.router,
-    prefix="/quizes",
-    tags=["quizes"],
+    prefix="/quizzes",
+    tags=["quizzes"],
     dependencies=[],
 )
 
