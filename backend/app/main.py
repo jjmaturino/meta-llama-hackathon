@@ -3,6 +3,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.router.instance import api_router
 
 
+# In-memory "databases"
+notes_db: Dict[int, Note] = {}
+questions_db: Dict[int, Question] = {}
+quizzes_db: Dict[int, Quiz] = {}
+
+# Simple ID counters for each type
+next_note_id: int = 1
+next_question_id: int = 1
+next_quiz_id: int = 1
+
+
 def get_application() -> FastAPI:
     application = FastAPI(
         title="llamas go yeerrrrr", openapi_url=f"/v1/openapi.json"
@@ -27,8 +38,3 @@ def get_application() -> FastAPI:
 
 
 app = get_application()  # fastapi processes
-
-@app.get("/")
-def read_root():
-    return {"message": "Hello World"}
-
