@@ -37,6 +37,7 @@ interface ConfirmationDialogProps {
   onConfirm: () => void;
   sourceNote: Note | null;
   targetNote: Note | null;
+  position: { x: number; y: number } | null;
 }
 
 const HoverMenu: React.FC<HoverMenuProps> = ({ note, position, onClose, onRefresh }) => {
@@ -120,48 +121,49 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   onConfirm,
   sourceNote,
   targetNote,
+  position
 }) => {
-  if (!isOpen || !sourceNote || !targetNote) return null;
+  if (!isOpen || !sourceNote || !targetNote || !position) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">
-          Suggested Connection Found
-        </h3>
-        <div className="text-gray-600 space-y-4 mb-6">
-          <p>
-            Einstein has detected a potential connection between these notes based on their content similarity:
-          </p>
-          <div className="bg-indigo-50 rounded-lg p-4">
-            <div className="mb-3">
-              <div className="font-medium text-indigo-900 mb-1">First Note:</div>
-              <div className="text-indigo-700">{sourceNote.title}</div>
-            </div>
-            <div>
-              <div className="font-medium text-indigo-900 mb-1">Second Note:</div>
-              <div className="text-indigo-700">{targetNote.title}</div>
-            </div>
-          </div>
-          <p className="text-sm text-gray-500 italic">
-            Would you like to establish this connection? This will help build your knowledge graph and improve future suggestions.
-          </p>
-        </div>
-        <div className="flex justify-end gap-3">
+    <div 
+      className="fixed z-50"
+      style={{
+        top: position.y - 30, // Position above the click point
+        left: position.x + 195, // Position slightly to the right of click point
+      }}
+    >
+      <div className="bg-white rounded-lg shadow-lg p-4 w-64 border border-gray-200">
+        <div className="flex justify-between items-start mb-3">
+          <h3 className="text-lg font-semibold text-gray-900">Spotted a relationship here</h3>
           <button
             onClick={onClose}
-            className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+            className="text-gray-400 hover:text-gray-600"
+            aria-label="Close dialog"
           >
-            Ignore Suggestion
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
+        </div>
+        
+        <div className="space-y-3 mb-4">
+          <div>
+            <div className="text-sm font-medium text-gray-500 mb-1">From:</div>
+            <div className="text-sm text-gray-900">{sourceNote.title}</div>
+          </div>
+          <div>
+            <div className="text-sm font-medium text-gray-500 mb-1">To:</div>
+            <div className="text-sm text-gray-900">{targetNote.title}</div>
+          </div>
+        </div>
+        
+        <div className="flex gap-2">
           <button
             onClick={onConfirm}
-            className="px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition-colors flex items-center"
+            className="flex-1 bg-indigo-600 text-white px-3 py-1.5 rounded text-sm font-medium hover:bg-indigo-700 transition-colors text-center"
           >
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-            Accept Connection
+            Connect
           </button>
         </div>
       </div>
@@ -179,7 +181,7 @@ const NotesGraph: React.FC<NotesGraphProps> = ({
   const [hoveredNote, setHoveredNote] = useState<Note | null>(null);
   const [menuPosition, setMenuPosition] = useState<{ x: number; y: number } | null>(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [selectedLink, setSelectedLink] = useState<{ source: Note; target: Note } | null>(null);
+  const [selectedLink, setSelectedLink] = useState<{ source: Note; target: Note; position: { x: number; y: number } } | null>(null);
 
   useEffect(() => {
     if (!svgRef.current || !notes.length) return;
@@ -316,7 +318,7 @@ const NotesGraph: React.FC<NotesGraphProps> = ({
       .data(links)
       .join('line')
       .attr('stroke', d => {
-        if (d.suggested) return '#4f46e5';
+        if (d.suggested) return '#ec4899';  // Tailwind pink-500
         return '#999';
       })
       .attr('stroke-opacity', d => {
@@ -351,7 +353,11 @@ const NotesGraph: React.FC<NotesGraphProps> = ({
           const sourceNote = notes.find(n => n.id === (d.source as GraphNode).id);
           const targetNote = notes.find(n => n.id === (d.target as GraphNode).id);
           if (sourceNote && targetNote) {
-            setSelectedLink({ source: sourceNote, target: targetNote });
+            setSelectedLink({ 
+              source: sourceNote, 
+              target: targetNote,
+              position: { x: _event.clientX, y: _event.clientY }
+            });
             setShowConfirmation(true);
           }
         }
@@ -474,6 +480,7 @@ const NotesGraph: React.FC<NotesGraphProps> = ({
         }}
         sourceNote={selectedLink?.source || null}
         targetNote={selectedLink?.target || null}
+        position={selectedLink?.position || null}
       />
     </div>
   );

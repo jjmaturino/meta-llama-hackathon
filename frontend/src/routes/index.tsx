@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useNotes } from '@/hooks/notes'
 import NotesGraph from '@/components/NotesGraph'
 import useClient from '@/utils/client'
@@ -10,6 +10,7 @@ export const Route = createFileRoute('/')({
 function HomePage() {
   const { notes, isLoading, error, refetch } = useNotes();
   const client = useClient();
+  const navigate = useNavigate();
 
   // Calculate tag counts
   const tagCounts = notes.reduce((acc: Record<string, number>, note) => {
@@ -83,7 +84,7 @@ function HomePage() {
                 <NotesGraph 
                   notes={notes} 
                   onNodeClick={(noteId) => {
-                    window.location.href = `/notes/${noteId}`;
+                    navigate({ to: '/notes/$slug', params: { slug: noteId } });
                   }}
                   onRefresh={() => refetch()}
                   onAcceptSuggestion={handleAcceptSuggestion}

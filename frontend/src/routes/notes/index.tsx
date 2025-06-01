@@ -43,12 +43,6 @@ function NotesPage() {
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">My Notes</h1>
-        <button
-          type="button"
-          className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Create New Note
-        </button>
       </div>
 
       {notes.length === 0 ? (
@@ -74,12 +68,15 @@ function NotesPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {notes.map((note: Note) => (
-            <div key={note.id} className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow duration-200">
+            <Link
+              key={note.id}
+              to="/notes/$slug"
+              params={{ slug: note.id }}
+              className="bg-white shadow rounded-lg p-6 hover:shadow-lg transition-shadow duration-200 block"
+            >
               <div className="flex justify-between items-start">
                 <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                  <Link to="/notes/$slug" params={{ slug: note.id }} className="hover:text-indigo-600">
-                    {note.title}
-                  </Link>
+                  {note.title}
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {note.tags.map((tag: string, tagIndex: number) => (
@@ -94,18 +91,14 @@ function NotesPage() {
               </div>
               <p className="text-gray-600 mb-4 line-clamp-3">{note.summary}</p>
               <div className="flex justify-between items-center">
-                <Link
-                  to="/notes/$slug"
-                  params={{ slug: note.id }}
-                  className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
-                >
+                <span className="text-indigo-600 text-sm font-medium">
                   View Details
-                </Link>
+                </span>
                 <div className="text-gray-400 text-sm">
                   {note.docs.length} reference{note.docs.length !== 1 ? 's' : ''}
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}

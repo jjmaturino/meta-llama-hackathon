@@ -358,7 +358,6 @@ You can also add TanStack Query Devtools to the root route (optional).
 
 ```tsx
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
 const rootRoute = createRootRoute({
   component: () => (
     <>
