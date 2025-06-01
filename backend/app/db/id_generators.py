@@ -1,3 +1,5 @@
+from app.db import next_note_id, next_question_id, next_quiz_id
+
 def generate_note_id() -> int:
     global next_note_id
     _id = next_note_id

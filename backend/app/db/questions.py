@@ -1,3 +1,8 @@
+from app.pydantic_models.question import Question
+from app.db.id_generators import generate_question_id
+from app.db import questions_db
+from typing import Optional, List
+
 # --- CRUD Operations for Questions ---
 def create_question(question: Question) -> Question:
     if question.id is None:

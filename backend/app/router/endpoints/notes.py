@@ -3,49 +3,13 @@ from typing import List
 import os
 from app.pydantic_models.notes import Note
 from app.pydantic_models.question import Question
-from app.pydantic_models.multiselect_question import MultiSelectQuestion
 from pydantic import BaseModel
+
+from app.db.notes import get_all_notes, get_note, create_note
+from app.db.id_generators import generate_note_id
 
 router = APIRouter()
 
-# In-memory dictionary of note IDs to Note objects
-notes_store = {}
-next_note_id = 3  # Start from 3 since 1 and 2 are used
-
-# Sample Note for demonstration
-sample_note = Note(
-    id=1,
-    title="Notes on Transformers",
-    tags=["AI", "ML"],
-    cues="- **Transformers**\n- proposed in the paper [Attention is All You Need](https://arxiv.org/abs/1706.03762).",
-    notes="- Can be used in a myriad of different applications...",
-    summary="A Transformer is a type of Machine Learning Model Architecture...",
-    docs=[
-        "https://jalammar.github.io/illustrated-transformer/",
-        "https://arxiv.org/abs/1607.06450",
-        "https://arxiv.org/abs/1706.03762"
-    ],
-    questions=[]
-)
-notes_store[sample_note.id] = sample_note
-
-# Add a second sample note
-sample_note2 = Note(
-    id=2,
-    title="Notes on Neural Networks",
-    tags=["AI", "Neural Networks"],
-    cues="- **Neural Networks**\n- Inspired by the human brain.",
-    notes="- Used for pattern recognition, classification, and regression tasks...",
-    summary="A Neural Network is a computational model inspired by the human brain...",
-    docs=[
-        "https://en.wikipedia.org/wiki/Artificial_neural_network",
-        "https://www.deeplearningbook.org/"
-    ],
-    questions=[]
-)
-notes_store[sample_note2.id] = sample_note2
-
-NOTES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'notes')
 
 class CreateNoteRequest(BaseModel):
     title: str
@@ -54,13 +18,12 @@ class CreateNoteRequest(BaseModel):
     notes: str
     summary: str
     docs: List[str]
-    questions: List[Question | MultiSelectQuestion] = []
+    questions: List[Question]
 
 @router.post("/", response_model=Note)
-def create_note(request: CreateNoteRequest):
-    global next_note_id
+def create_note_handler(request: CreateNoteRequest):
     note = Note(
-        id=next_note_id,
+        id=generate_note_id(),
         title=request.title,
         tags=request.tags,
         cues=request.cues,
@@ -69,18 +32,18 @@ def create_note(request: CreateNoteRequest):
         docs=request.docs,
         questions=request.questions
     )
-    notes_store[note.id] = note
-    next_note_id += 1
-    return note
+    new_note = create_note(note)
+
+    return new_note
 
 @router.get("/", response_model=List[Note])
-def get_all_notes():
+def get_all_notes_handler():
     # List all .md files in the notes directory, return their uuids (filenames without .md)
-    return list(notes_store.values())
+    return get_all_notes()
 
 @router.get("/{uuid}", response_model=Note)
-def get_note_by_uuid(uuid: int):
-    note = notes_store.get(uuid)
+def get_note_by_uuid_handler(uuid: int):
+    note = get_note(uuid)
     if not note:
         raise HTTPException(status_code=404, detail="Note not found")
     return note

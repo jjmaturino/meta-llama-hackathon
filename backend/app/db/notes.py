@@ -1,3 +1,8 @@
+from app.db import notes_db
+from app.pydantic_models.notes import Note
+from app.db.id_generators import generate_note_id
+from typing import Optional, List
+
 # --- CRUD Operations for Notes ---
 def create_note(note: Note) -> Note:
     if note.id is None:

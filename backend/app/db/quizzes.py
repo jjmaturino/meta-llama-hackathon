@@ -1,4 +1,4 @@
-from app.main import quizzes_db
+from app.db import quizzes_db
 from app.pydantic_models.quiz import Quiz
 from app.db.id_generators import generate_quiz_id
 from typing import Optional, List
