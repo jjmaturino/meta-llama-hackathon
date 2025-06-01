@@ -4,11 +4,13 @@ import os
 from app.pydantic_models.notes import Note
 from app.pydantic_models.question import Question
 from app.pydantic_models.multiselect_question import MultiSelectQuestion
+from pydantic import BaseModel
 
 router = APIRouter()
 
 # In-memory dictionary of note IDs to Note objects
 notes_store = {}
+next_note_id = 3  # Start from 3 since 1 and 2 are used
 
 # Sample Note for demonstration
 sample_note = Note(
@@ -44,6 +46,32 @@ sample_note2 = Note(
 notes_store[sample_note2.id] = sample_note2
 
 NOTES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'notes')
+
+class CreateNoteRequest(BaseModel):
+    title: str
+    tags: List[str]
+    cues: str
+    notes: str
+    summary: str
+    docs: List[str]
+    questions: List[Question | MultiSelectQuestion] = []
+
+@router.post("/", response_model=Note)
+def create_note(request: CreateNoteRequest):
+    global next_note_id
+    note = Note(
+        id=next_note_id,
+        title=request.title,
+        tags=request.tags,
+        cues=request.cues,
+        notes=request.notes,
+        summary=request.summary,
+        docs=request.docs,
+        questions=request.questions
+    )
+    notes_store[note.id] = note
+    next_note_id += 1
+    return note
 
 @router.get("/", response_model=List[Note])
 def get_all_notes():
