@@ -5,6 +5,7 @@ from app.router.endpoints import(
     users,
     questions,
     answers,
+    quizes,
 )
 
 
@@ -36,6 +37,13 @@ api_router.include_router(
     answers.router,
     prefix="/answers",
     tags=["answers"],
+    dependencies=[],
+)
+
+api_router.include_router(
+    quizes.router,
+    prefix="/quizes",
+    tags=["quizes"],
     dependencies=[],
 )
 
