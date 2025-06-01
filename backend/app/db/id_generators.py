@@ -1,4 +1,4 @@
-from app.db import next_note_id, next_question_id, next_quiz_id
+from app.db import next_note_id, next_question_id, next_quiz_id, next_source_material_id
 
 def generate_note_id() -> int:
     global next_note_id
@@ -16,4 +16,11 @@ def generate_quiz_id() -> int:
     global next_quiz_id
     _id = next_quiz_id
     next_quiz_id += 1
+    return _id
+
+
+def generate_source_material_id() -> int:
+    global next_source_material_id
+    _id = next_source_material_id
+    next_source_material_id += 1
     return _id

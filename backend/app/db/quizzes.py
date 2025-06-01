@@ -5,10 +5,10 @@ from typing import Optional, List
 
 # --- CRUD Operations for Quizzes ---
 def create_quiz(quiz: Quiz) -> Quiz:
-    if quiz.id is None:
-        quiz.id = generate_quiz_id()
+    if quiz.ID == 0 or quiz.ID is None:
+        quiz.ID = generate_quiz_id()
 
-    quizzes_db[quiz.id] = quiz
+    quizzes_db[quiz.ID] = quiz
     return quiz
 
 def get_quiz(quiz_id: int) -> Optional[Quiz]:
